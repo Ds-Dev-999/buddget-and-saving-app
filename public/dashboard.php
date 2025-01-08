@@ -320,32 +320,34 @@ $budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
         const budget = <?= $budget_amount ?>; // Total budget
         const expenses = <?= $total_expenses ?>; // Total expenses
         const savingsOrDue = <?= $savings ?>; // Savings (can be negative)
+        const budgetUsed = expenses; // Amount used from the budget
 
         // Prepare data for the chart
         const budgetData = [
             Math.max(savingsOrDue, 0), // Savings
             Math.min(savingsOrDue, 0) * -1, // Due (if savings are negative)
-            expenses // Expenses
+            expenses, // Expenses
+            budget - expenses // Remaining budget
         ];
-        const budgetLabels = ['Savings', 'Due', 'Expenses'];
-        const budgetColors = ['#4caf50', '#ff9800', '#f44336'];
+        const budgetLabels = ['Savings', 'Due', 'Expenses', 'Budget Remaining'];
+        const budgetColors = ['#4caf50', '#ff9800', '#f44336', '#2196f3'];
 
         new Chart(budgetPieCtx, {
             type: 'pie',
             data: {
-                labels: budgetLabels,
-                datasets: [{
-                    data: budgetData,
-                    backgroundColor: budgetColors
-                }]
+            labels: budgetLabels,
+            datasets: [{
+                data: budgetData,
+                backgroundColor: budgetColors
+            }]
             },
             options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
+            responsive: true,
+            plugins: {
+                legend: {
+                position: 'bottom'
                 }
+            }
             }
         });
     </script>
