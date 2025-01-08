@@ -326,11 +326,22 @@ $budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
         const budgetData = [
             Math.max(savingsOrDue, 0), // Savings
             Math.min(savingsOrDue, 0) * -1, // Due (if savings are negative)
-            expenses, // Expenses
-            budget - expenses // Remaining budget
+            expenses // Expenses
         ];
-        const budgetLabels = ['Savings', 'Due', 'Expenses', 'Budget Remaining'];
-        const budgetColors = ['#4caf50', '#ff9800', '#f44336', '#2196f3'];
+        const budgetLabels = ['Savings', 'Due', 'Expenses'];
+        const budgetColors = ['#4caf50', '#ff9800', '#ffff00',];
+
+        // Add remaining budget only if it's not negative
+        const remainingBudget = budget - expenses;
+        if (remainingBudget > 0) {
+            budgetData.push(remainingBudget);
+            budgetLabels.push('Budget Remaining');
+            budgetColors.push('#2196f3');
+        } else {
+            budgetData.push(Math.abs(remainingBudget));
+            budgetLabels.push('Exceeded Budget');
+            budgetColors.push('#ff0000'); // Dangerous color for exceeded budget
+        }
 
         new Chart(budgetPieCtx, {
             type: 'pie',
