@@ -275,20 +275,20 @@ $budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
         new Chart(incomeExpenseCtx, {
             type: 'bar',
             data: {
-                labels: ['Income', 'Expenses', 'Savings'],
-                datasets: [{
-                    label: 'Amount ($)',
-                    data: [<?= $total_income ?>, <?= $total_expenses ?>, <?= $savings ?>],
-                    backgroundColor: ['#4caf50', '#f44336', '#2196f3']
-                }]
+            labels: ['Income', 'Expenses', '<?= $savings >= 0 ? 'Savings' : 'Due' ?>'],
+            datasets: [{
+                label: 'Amount (LKR)',
+                data: [<?= $total_income ?>, <?= $total_expenses ?>, <?= abs($savings) ?>],
+                backgroundColor: ['#4caf50', '#f44336', '<?= $savings >= 0 ? '#2196f3' : '#ff9800' ?>']
+            }]
             },
             options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
+            responsive: true,
+            plugins: {
+                legend: {
+                display: false
                 }
+            }
             }
         });
 
@@ -297,19 +297,19 @@ $budgets = $stmt->fetchAll(PDO::FETCH_ASSOC);
         new Chart(expensePieCtx, {
             type: 'pie',
             data: {
-                labels: ['Expenses', 'Savings'],
-                datasets: [{
-                    data: [<?= $total_expenses ?>, <?= $savings ?>],
-                    backgroundColor: ['#f44336', '#4caf50']
-                }]
+            labels: ['Expenses', '<?= $savings >= 0 ? 'Savings' : 'Due' ?>'],
+            datasets: [{
+                data: [<?= $total_expenses ?>, <?= abs($savings) ?>],
+                backgroundColor: ['#f44336', '<?= $savings >= 0 ? '#4caf50' : '#ff9800' ?>']
+            }]
             },
             options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
+            responsive: true,
+            plugins: {
+                legend: {
+                position: 'bottom'
                 }
+            }
             }
         });
 
